@@ -254,7 +254,7 @@
 // });
 
 // app.listen(4000);
-
+const PropTypes = require('prop-types');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
