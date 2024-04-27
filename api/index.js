@@ -313,7 +313,7 @@ async function uploadToFirebaseStorage(filePath, originalFilename, mimetype) {
     return url[0];
 }
 
-mongoose.connect(process.env.MONGO_URL);
+// mongoose.connect(process.env.MONGO_URL);
 
 function getUserDatafromReq(req) {
     return new Promise((resolve, reject) => {
@@ -327,10 +327,12 @@ function getUserDatafromReq(req) {
 
 
 app.get('/api/test', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     res.json('test ok');
 });
 
 app.post('/api/register', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { name, email, password } = req.body;
 
     try {
@@ -347,6 +349,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { email, password } = req.body;
 
     try {
@@ -381,6 +384,7 @@ app.post('/api/login', async (req, res) => {
 
 
 app.get('/api/profile', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { token } = req.cookies;
     if (token) {
         jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -394,12 +398,14 @@ app.get('/api/profile', (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     res.cookie('token', '').json(true);
 });
 
 const photosMiddleware = multer({ dest: '/tmp' });
 
 app.post('/api/upload', photosMiddleware.array('photos', 100), async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const uploadedFiles = [];
     for (let i = 0; i < req.files.length; i++) {
         const { path, originalname, mimetype } = req.files[i];
@@ -410,6 +416,7 @@ app.post('/api/upload', photosMiddleware.array('photos', 100), async (req, res) 
 });
 
 app.post('/api/upload-by-link', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { link } = req.body;
     const newName = 'photo' + Date.now() + '.jpg';
     await imageDownloader.image({
@@ -421,6 +428,7 @@ app.post('/api/upload-by-link', async (req, res) => {
 });
 // Add a new endpoint for canceling bookings
 app.delete('/api/bookings/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { id } = req.params;
     try {
         await Booking.findByIdAndDelete(id);
@@ -433,6 +441,7 @@ app.delete('/api/bookings/:id', async (req, res) => {
 
 // Add a new endpoint to handle place deletion
 app.delete('/api/places/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { id } = req.params;
     try {
         await Place.findByIdAndDelete(id);
@@ -449,6 +458,7 @@ app.delete('/api/places/:id', async (req, res) => {
 
 
 app.post('/api/places', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { token } = req.cookies;
     const {
         title, address, addedPhotos,
@@ -470,6 +480,7 @@ app.post('/api/places', (req, res) => {
 });
 
 app.get('/api/user-places', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { token } = req.cookies;
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
         const { id } = userData;
@@ -478,11 +489,13 @@ app.get('/api/user-places', (req, res) => {
 });
 
 app.get('/api/places/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { id } = req.params;
     res.json(await Place.findById(id));
 });
 
 app.put('/api/places', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const { token } = req.cookies;
     const {
         id, title, address, addedPhotos,
@@ -505,10 +518,12 @@ app.put('/api/places', async (req, res) => {
 });
 
 app.get('/api/places', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     res.json(await Place.find());
 })
 
 app.post('/api/bookings', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const userData = await getUserDatafromReq(req);
     const {
         place, checkIn, checkOut, guests, name, phone, price,
@@ -524,6 +539,7 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 app.get('/api/bookings', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const userData = await getUserDatafromReq(req);
     const currentDate = new Date();
 
