@@ -287,7 +287,7 @@ const serviceAccount = require("./serviceAccountKey.json"); // Path to your Fire
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: "voyesta-ef64d.appspot.com" // Replace with your Firebase Storage bucket URL
+    storageBucket: process.env.VITE_STORAGE_BUCKET // Replace with your Firebase Storage bucket URL
 });
 
 async function uploadToFirebaseStorage(filePath, originalFilename, mimetype) {
