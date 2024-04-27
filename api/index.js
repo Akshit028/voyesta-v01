@@ -279,7 +279,7 @@ app.use(cookieParser());
 app.use('api/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
-    origin: "https://voyesta-v1.vercel.app/api"
+    origin: "https://voyesta-v1.vercel.app"
 }));
 
 const admin = require("firebase-admin");
