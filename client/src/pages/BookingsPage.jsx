@@ -6,6 +6,7 @@ import BookingDates from "../BookingDates";
 import { Link } from "react-router-dom";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import Swal from 'sweetalert2';
+import loadinggif from "../assets/loading.gif"
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -68,7 +69,7 @@ export default function BookingsPage() {
       </div>
       <div className="mx-auto mt-8 w-full min-h-screen">
         <AccountNav />
-        {loading && <p>Loading...</p>}
+        {loading && <div className="flex justify-center"><img src={loadinggif} alt="loading" /></div>}
         {!loading && bookings?.length === 0 && <p className="text-2xl text-center font-bold text-primary">No bookings yet</p>}
         {!loading && bookings?.length > 0 && bookings.map(booking => (
           <Link to={`/account/bookings/${booking._id}`}>
