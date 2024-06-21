@@ -39,11 +39,11 @@ const serviceAccount = {
     auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
     universe_domain: process.env.UNIVERSE_DOMAIN
-}; // Path to your Firebase service account key file
+}; 
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.VITE_STORAGE_BUCKET // Replace with your Firebase Storage bucket URL
+    storageBucket: process.env.VITE_STORAGE_BUCKET 
 });
 
 async function uploadToFirebaseStorage(filePath, originalFilename, mimetype) {
@@ -63,13 +63,12 @@ async function uploadToFirebaseStorage(filePath, originalFilename, mimetype) {
     const file = bucket.file(newFilename);
     const url = await file.getSignedUrl({
         action: 'read',
-        expires: '03-09-2491' // Replace with an appropriate expiry date
+        expires: '03-09-2491' 
     });
 
     return url[0];
 }
 
-// mongoose.connect(process.env.MONGO_URL);
 
 function getUserDatafromReq(req) {
     return new Promise((resolve, reject) => {
@@ -109,21 +108,18 @@ app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if a user with the provided email exists
         const userDoc = await User.findOne({ email });
 
         if (!userDoc) {
             return res.status(422).json({ message: 'Invalid email or password' });
         }
 
-        // Verify the provided password against the hashed password stored in the database
         const passwordMatch = bcrypt.compareSync(password, userDoc.password);
 
         if (!passwordMatch) {
             return res.status(422).json({ message: 'Invalid email or password' });
         }
 
-        // If both email and password are correct, generate a JWT token and return it along with the user data
         jwt.sign({
             email: userDoc.email,
             id: userDoc._id,
@@ -182,7 +178,6 @@ app.post('/api/upload-by-link', async (req, res) => {
     const url = await uploadToFirebaseStorage('/tmp/' + newName, newName, mime.lookup('/tmp/' + newName));
     res.json(url);
 });
-// Add a new endpoint for canceling bookings
 app.delete('/api/bookings/:id', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
     const { id } = req.params;
@@ -195,7 +190,6 @@ app.delete('/api/bookings/:id', async (req, res) => {
     }
 });
 
-// Add a new endpoint to handle place deletion
 app.delete('/api/places/:id', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
     const { id } = req.params;
@@ -300,7 +294,6 @@ app.get('/api/bookings', async (req, res) => {
     const currentDate = new Date();
 
     try {
-        // Find bookings where the checkout date is in the future
         const bookings = await Booking.find({
             user: userData.id,
             checkOut: { $gte: currentDate }
