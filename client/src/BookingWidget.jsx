@@ -183,6 +183,7 @@ export default function BookingWidget({ place }) {
             <input
               required
               type="date"
+              min={new Date().toISOString().split("T")[0]} // Restricts selection to today and future dates
               value={checkIn}
               onChange={(ev) => { setCheckIn(ev.target.value); setError(''); }}
             />
@@ -192,6 +193,7 @@ export default function BookingWidget({ place }) {
             <input
               required
               type="date"
+              min={checkIn || new Date().toISOString().split("T")[0]} // Check-out cannot be before check-in
               value={checkOut}
               onChange={(ev) => { setCheckOut(ev.target.value); setError(''); }}
             />
